@@ -1,1 +1,1 @@
-Server Initialised
+[2017-05-14 19:44:06] Server Initialised
