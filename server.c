@@ -10,6 +10,8 @@
 
 #include <pthread.h>
 
+#include "log.h"
+
 #define CONNECT_QUEUE 20
 
 
@@ -31,7 +33,7 @@ int main(int argc, char **argv){
    options_t options = get_options(argc, argv);
 
    //Initialise our log file
-   //TODO
+   init_log("log.txt");
 
    //Initialise our server
    init_server(options.port);
