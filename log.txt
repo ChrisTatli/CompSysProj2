@@ -1,1 +1,3 @@
-[2017-05-14 19:44:06] Server Initialised
+[2017-05-14 21:21:15] Server Initialised
+[2017-05-14 21:21:15] (0.0.0.0) Closing Log File
+[2017-05-14 21:21:15] (0.0.0.0) Server Terminated

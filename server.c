@@ -12,7 +12,7 @@
 
 #include "log.h"
 
-#define CONNECT_QUEUE 20
+#define CONNECT_QUEUE 100
 
 
 // Structure to hold command line arguments
@@ -33,10 +33,24 @@ int main(int argc, char **argv){
    options_t options = get_options(argc, argv);
 
    //Initialise our log file
-   init_log("log.txt");
+   log_init("log.txt");
 
    //Initialise our server
-   init_server(options.port);
+   int servfd = init_server(options.port);
+
+   // Main Server Loop
+   /*for(;;){
+      struct sockaddr_storage client_addr;
+      socklen_t sin_size = sizeof client_addr;
+      int client_fd = accept(servfd, (struct sockaddr *) &client_addr, &sin_size);
+      if(client_fd == -1){
+         fprintf(stderr, "Error accepting new client\n");
+         continue;
+      }
+      printf("Hi from fd %d\n", client_fd );
+   }*/
+
+   log_terminate();
 
    return 0;
 }

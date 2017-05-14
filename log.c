@@ -1,3 +1,4 @@
+//ctatli 640427
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -12,12 +13,15 @@ pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 /* Fucntion Declarations*/
 void log_datetime();
+void log_ip(int socket);
+void log_socket(int socket);
+
 
 
 /*
 ** Initialise a new file to log server and client interactions
 */
-void init_log(char *filepath){
+void log_init(char *filepath){
 
    pthread_mutex_lock(&lock);
 
@@ -29,10 +33,24 @@ void init_log(char *filepath){
       } else {
          log_f = file;
          log_datetime();
-         fprintf(log_f, " Server Initialised" );
+         fprintf(log_f, " Server Initialised\n");
       }
    } else {
       fprintf(stderr, "File %s is already open\n",filepath);
+   }
+   pthread_mutex_unlock(&lock);
+}
+
+void log_terminate(){
+   pthread_mutex_lock(&lock);
+   if(log_f == NULL){
+      printf("error with logfile\n");
+   } else {
+      log_datetime();
+      fprintf(log_f, " (0.0.0.0) Closing Log File\n");
+      log_datetime();
+      fprintf(log_f, " (0.0.0.0) Server Terminated\n" );
+      fclose(log_f);
    }
    pthread_mutex_unlock(&lock);
 }
@@ -50,4 +68,20 @@ void log_datetime(){
    tm_info = localtime(&datetime);
    strftime(buffer,TIME_BUFFER,"%Y-%m-%d %H:%M:%S",tm_info);
    fprintf(log_f, "[%s]",buffer);
+}
+
+void log_ip(int socket){
+
+}
+
+void log_socket(int socket){
+
+}
+
+void log_connect(int socket){
+
+}
+
+void log_disconnect(int socket){
+
 }
