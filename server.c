@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -11,11 +12,11 @@
 #include <pthread.h>
 
 #include "log.h"
+#include "sstp.h"
 
 #define CONNECT_QUEUE 100
 
 
-// Structure to hold command line arguments
 typedef struct{
    char *port;
 }options_t;
@@ -24,7 +25,9 @@ typedef struct{
 options_t get_options(int argc, char **argv);
 void print_usage(char *prog_name);
 int init_server(char *port);
-
+void block_sig();
+void *handle_sig(void* n);
+void end_server(int signum);
 
 /****** MAIN ******/
 int main(int argc, char **argv){
@@ -38,8 +41,12 @@ int main(int argc, char **argv){
    //Initialise our server
    int servfd = init_server(options.port);
 
+   pthread_t sighandler;
+   pthread_create(&sighandler,NULL,handle_sig,NULL);
+   block_sig();
+
    // Main Server Loop
-   /*for(;;){
+   for(;;){
       struct sockaddr_storage client_addr;
       socklen_t sin_size = sizeof client_addr;
       int client_fd = accept(servfd, (struct sockaddr *) &client_addr, &sin_size);
@@ -47,10 +54,8 @@ int main(int argc, char **argv){
          fprintf(stderr, "Error accepting new client\n");
          continue;
       }
-      printf("Hi from fd %d\n", client_fd );
-   }*/
-
-   log_terminate();
+   
+   }
 
    return 0;
 }
@@ -102,13 +107,9 @@ int init_server(char *port){
 }
 
 
-/*
-** Loads the port number into the options struct, and return it
-*/
 options_t get_options(int argc, char **argv){
    options_t options;
 
-   //Checking arguments
    if(argc < 2){
       print_usage(argv[0]);
    } else{
@@ -118,11 +119,39 @@ options_t get_options(int argc, char **argv){
    return options;
 }
 
-/*
-* Prints the ussage of the program if the user inputs the wrong arguments
-*/
+
 void print_usage(char *prog_name){
    fprintf(stderr, "usage: %s [port_number]\n", prog_name);
    fprintf(stderr, "\tport_number: a valid port number to listen on\n");
    exit(EXIT_FAILURE);
+}
+
+void *handle_sig(void* n){
+   struct sigaction action;
+   action.sa_handler = end_server;
+   sigemptyset(&action.sa_mask);
+   action.sa_flags = 0;
+
+   sigaction(SIGINT, &action, NULL);
+   sigaction(SIGTERM, &action, NULL);
+
+   sigset_t ss;
+   sigemptyset(&ss);
+   while(1){
+      sigsuspend(&ss);
+   }
+}
+
+void block_sig(){
+   sigset_t ss;
+   sigemptyset(&ss);
+   sigaddset(&ss,SIGINT);
+   sigaddset(&ss,SIGTERM);
+   pthread_sigmask(SIG_BLOCK, &ss, NULL);
+}
+
+void end_server(int signum){
+   printf("\nServer terminated\n");
+   log_terminate();
+   exit(EXIT_SUCCESS);
 }

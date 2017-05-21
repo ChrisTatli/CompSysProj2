@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "unint256.h"
+
 
 // SSTP Protocol Header and Payload lengths
 #define HEADER_LEN 4
@@ -10,6 +10,8 @@
 #define SEED_LEN 64
 #define DELIM 2
 #define BUF_LEN 1024
+
+
 
 /* Function Declarations */
 int receive_length(int socket, BYTE *buffer, unint16_t len);
@@ -40,8 +42,15 @@ int receive_length(int socket, BYTE *buffer, uint16_t len){
 
 int receive_message(int socket, BYTE **buffer){
    BYTE* message_buf;
+   uint16_t num_bytes = recv(socket,message_buf,BUF_LEN,0);
 
-   int n = receive_length(socket,message_buf,BUFF_LEN);
-   payload_len = handle_header(message);
+
+   int i = 0;
+   while(num_bytes > 0){
+      if(message_buf[i] == '\r' && message_buf[i+1] == '\n'){
+         buffer = malloc(i+2 * sizeof(*BYTE));
+      }
+   }
+   return 1;
 
 }
