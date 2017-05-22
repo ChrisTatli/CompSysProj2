@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <arpa/inet.h>
 
 #include "log.h"
 
@@ -13,9 +14,8 @@ pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 /* Fucntion Declarations*/
 void log_datetime();
-void log_ip(int socket);
-void log_socket(int socket);
-
+void log_client_ip(int socket);
+void log_sstp(int socket);
 
 
 /*
@@ -70,18 +70,35 @@ void log_datetime(){
    fprintf(log_f, "[%s]",buffer);
 }
 
-void log_ip(int socket){
-
-}
-
-void log_socket(int socket){
-
+void log_client_ip(int socket){
+   struct sockaddr_in cli;
+   socklen_t cli_len = sizeof cli;
+   if(getpeername(socket,(struct sockaddr*) &cli, &cli_len) == 0){
+      char ip4[INET_ADDRSTRLEN];
+      if(inet_ntop(AF_INET,&cli,ip4,INET_ADDRSTRLEN)){
+         fprintf(log_f, " (%s) New client connected with socket id %d\n", ip4,socket);
+      }else{
+         fprintf(stderr, " Ip invalid\n");
+         fprintf(log_f, "Error with ip address of client\n");
+      }
+   } else {
+      fprintf(log_f, "Error with ip address of client\n" );
+   }
 }
 
 void log_connect(int socket){
-
+   pthread_mutex_lock(&lock);
+   if(log_f){
+      log_datetime();
+      log_client_ip(socket);
+   }
+   pthread_mutex_unlock(&lock);
 }
 
 void log_disconnect(int socket){
+
+}
+
+void log_sstp(int socket){
 
 }

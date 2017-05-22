@@ -3,11 +3,11 @@
 CC = gcc
 CFLAGS = -Wall -std=gnu99
 
-EXE = simpleminer
-SRC = server.c log.c
-OBJ = server.o log.o
+EXE = server
+SRC = server.c log.c sstp.c
+OBJ = server.o log.o sstp.o
 
-simpleminer: $(OBJ)
+server: $(OBJ)
 	$(CC) $(CFLAGS) -o $(EXE) $(OBJ)
 
 clean:

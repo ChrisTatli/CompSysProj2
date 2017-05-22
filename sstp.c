@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include "sstp.h"
 
 
 // SSTP Protocol Header and Payload lengths
@@ -11,46 +14,64 @@
 #define DELIM 2
 #define BUF_LEN 1024
 
+uint8_t* parse_buffer(uint8_t* start, uint8_t* end);
+void parse_input(uint8_t* src);
+void check_header(uint8_t *src);
 
+struct Message_s{
+   uint8_t buffer[BUF_LEN];
+   uint8_t* end;
+};
 
-/* Function Declarations */
-int receive_length(int socket, BYTE *buffer, unint16_t len);
-
-
-/*
-** socket: fd to get byte stream from
-** buffer: store the message in a buffer
-** len: number of bytes to read in
-** returns the amount of bytes read in
-*/
-int receive_length(int socket, BYTE *buffer, uint16_t len){
-   BYTE *current = buffer;
-   uint16_t remaining = len;
-   while (remaining > 0) {
-      unint16_t num_bytes = recv(socket,current,remaining,0);
-      //Something went wrong
-      if (num_bytes < 0) {
-         return num_bytes;
-      } else {
-         //Advance our point in the buffer by the number of bytes read in
-         current += num_bytes;
-         remaining -= num_bytes;
+void receive_client(int fd){
+   struct Message_s message;
+   memset(message.buffer,'\0',BUF_LEN);
+   message.end = &message.buffer[0];
+   uint8_t received = 0;
+   for(;;){
+      uint8_t n =  recv(fd,message.end,BUF_LEN,0);
+      received += n;
+      message.end += n;
+      uint8_t *str;
+      if((str = parse_buffer(message.buffer, message.end)) != NULL){
+         parse_input(str);
+         message.end -= received;
+         received = 0;
+         //Gotta Free
+         free(str);
       }
    }
-   return len;
 }
 
-int receive_message(int socket, BYTE **buffer){
-   BYTE* message_buf;
-   uint16_t num_bytes = recv(socket,message_buf,BUF_LEN,0);
 
-
+uint8_t* parse_buffer(uint8_t buffer[], uint8_t* end){
+   printf("%p %p\n", &buffer[0], end);
    int i = 0;
-   while(num_bytes > 0){
-      if(message_buf[i] == '\r' && message_buf[i+1] == '\n'){
-         buffer = malloc(i+2 * sizeof(*BYTE));
+   uint8_t* ret = malloc(sizeof(uint8_t)*BUF_LEN);
+   while (&buffer[i] != end) {
+      if(buffer[i] == '\r' && buffer[i+1] == '\n'){
+         //Do i need to cast these?
+         strncpy((char*)ret,(char*)buffer, BUF_LEN);
+         //Keep eye on this
+         memmove(&buffer[0], end, BUF_LEN - (i + 2));
+
+         return ret;
+      } else {
+         i++;
       }
    }
-   return 1;
+   return NULL;
+}
 
+void parse_input(uint8_t* src){
+   check_header(src);
+}
+
+void check_header(uint8_t *src){
+
+   if(strncmp((char*)src,"PING",HEADER_LEN)==0){
+      printf("PONG\n");
+   } else if (strncmp((char*)src,"ERRO",HEADER_LEN)==0) {
+      printf("ERRO\n" );
+   }
 }

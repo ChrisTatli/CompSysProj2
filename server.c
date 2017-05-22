@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <unistd.h>
 
 #include <pthread.h>
 
@@ -28,6 +29,7 @@ int init_server(char *port);
 void block_sig();
 void *handle_sig(void* n);
 void end_server(int signum);
+void *handle_client(int n);
 
 /****** MAIN ******/
 int main(int argc, char **argv){
@@ -54,7 +56,10 @@ int main(int argc, char **argv){
          fprintf(stderr, "Error accepting new client\n");
          continue;
       }
-   
+      log_connect(client_fd);
+
+      pthread_t client_worker;
+      pthread_create(&client_worker, NULL, handle_client, client_fd);
    }
 
    return 0;
@@ -106,24 +111,9 @@ int init_server(char *port){
    return file_des;
 }
 
-
-options_t get_options(int argc, char **argv){
-   options_t options;
-
-   if(argc < 2){
-      print_usage(argv[0]);
-   } else{
-      options.port = argv[1];
-   }
-
-   return options;
-}
-
-
-void print_usage(char *prog_name){
-   fprintf(stderr, "usage: %s [port_number]\n", prog_name);
-   fprintf(stderr, "\tport_number: a valid port number to listen on\n");
-   exit(EXIT_FAILURE);
+void *handle_client(int fd){
+   receive_client(fd);
+   close(fd);
 }
 
 void *handle_sig(void* n){
@@ -154,4 +144,23 @@ void end_server(int signum){
    printf("\nServer terminated\n");
    log_terminate();
    exit(EXIT_SUCCESS);
+}
+
+
+void print_usage(char *prog_name){
+   fprintf(stderr, "usage: %s [port_number]\n", prog_name);
+   fprintf(stderr, "\tport_number: a valid port number to listen on\n");
+   exit(EXIT_FAILURE);
+}
+
+options_t get_options(int argc, char **argv){
+   options_t options;
+
+   if(argc < 2){
+      print_usage(argv[0]);
+   } else{
+      options.port = argv[1];
+   }
+
+   return options;
 }
