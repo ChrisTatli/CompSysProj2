@@ -95,9 +95,6 @@ void log_connect(int socket){
    pthread_mutex_unlock(&lock);
 }
 
-void log_disconnect(int socket){
-
-}
 
 void log_sstp(int socket){
 

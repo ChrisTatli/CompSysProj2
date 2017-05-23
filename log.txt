@@ -1,4 +1,4 @@
-[2017-05-23 01:33:00] Server Initialised
-[2017-05-23 01:33:02] (16.2.241.187) New client connected with socket id 5
-[2017-05-23 01:33:30] (0.0.0.0) Closing Log File
-[2017-05-23 01:33:30] (0.0.0.0) Server Terminated
+[2017-05-23 16:52:43] Server Initialised
+[2017-05-23 16:52:46] (16.2.238.237) New client connected with socket id 5
+[2017-05-23 16:53:24] (0.0.0.0) Closing Log File
+[2017-05-23 16:53:24] (0.0.0.0) Server Terminated
