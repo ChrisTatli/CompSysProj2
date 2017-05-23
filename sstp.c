@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include "sstp.h"
+#include "log.h"
 
 
 // SSTP Protocol Header and Payload lengths
@@ -47,12 +48,12 @@ void receive_client(int fd){
       uint8_t *str;
       uint8_t sent[1024];
       if((str = parse_buffer(message.buffer, message.end)) != NULL){
+         log_sstp(fd,str);
          header_t header = check_header(str);
          parse_input(str,sent,header);
          uint8_t m = strlen((char*)sent);
          send(fd,sent,m,0);
-         //Logsstep
-
+         log_sstp(fd,sent);
          memset(sent,'\0',BUF_LEN);
          message.end -= received;
          received = 0;

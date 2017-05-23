@@ -15,7 +15,7 @@ pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 /* Fucntion Declarations*/
 void log_datetime();
 void log_client_ip(int socket);
-void log_sstp(int socket);
+
 
 
 /*
@@ -76,7 +76,7 @@ void log_client_ip(int socket){
    if(getpeername(socket,(struct sockaddr*) &cli, &cli_len) == 0){
       char ip4[INET_ADDRSTRLEN];
       if(inet_ntop(AF_INET,&cli,ip4,INET_ADDRSTRLEN)){
-         fprintf(log_f, " (%s) New client connected with socket id %d\n", ip4,socket);
+         fprintf(log_f, " (%s) Socket:%d ", ip4,socket);
       }else{
          fprintf(stderr, " Ip invalid\n");
          fprintf(log_f, "Error with ip address of client\n");
@@ -91,11 +91,18 @@ void log_connect(int socket){
    if(log_f){
       log_datetime();
       log_client_ip(socket);
+      fprintf(log_f, "New Connection \n");
    }
    pthread_mutex_unlock(&lock);
 }
 
 
-void log_sstp(int socket){
-
+void log_sstp(int socket, uint8_t *msg){
+   pthread_mutex_lock(&lock);
+   if(log_f){
+      log_datetime();
+      log_client_ip(socket);
+      fprintf(log_f, "%s\n", msg);
+   }
+   pthread_mutex_unlock(&lock);
 }
