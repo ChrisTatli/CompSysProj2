@@ -92,12 +92,14 @@ static inline void uint256_mul (BYTE *res, BYTE *a, BYTE *b) {
 // we bound the exponent to 4 bytes as it is pointless to support an
 // integer greater than that, it'd simply overflow beyond 256bits.
 static inline void uint256_exp (BYTE *res, BYTE *base, uint32_t exp) {
+
     if (res == NULL) {
         return;
     }
     if (exp == 0) {
         for (size_t i = 0; i < 31; res[i++] = 0);
         res[31] = 0x1;
+
         return;
     }
 
@@ -112,6 +114,7 @@ static inline void uint256_exp (BYTE *res, BYTE *base, uint32_t exp) {
     temp[31] = 0x1;
 
     while (exp > 1) {
+
         if (exp % 2 == 0) {
             uint256_mul (acc, acc, acc);
             exp = exp / 2;

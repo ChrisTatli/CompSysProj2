@@ -8,21 +8,6 @@
 #include "log.h"
 
 
-// SSTP Protocol Header and Payload lengths
-#define HEADER_LEN 4
-#define ERROR_LEN 40
-#define SEED_LEN 64
-#define DELIM 2
-#define BUF_LEN 1024
-
-typedef enum header_e{
-   PING,
-   PONG,
-   OKAY,
-   ERRO,
-   MALF
-}header_t;
-
 struct Message_s{
    uint8_t buffer[BUF_LEN];
    uint8_t* end;
@@ -33,6 +18,7 @@ uint8_t* parse_buffer(uint8_t* start, uint8_t* end);
 void parse_input(uint8_t* src, uint8_t* message, header_t header);
 header_t check_header(uint8_t *src);
 void build_message(uint8_t* message,header_t head);
+int parse_soln(uint8_t* src, soln_t* soln);
 
 
 
@@ -49,6 +35,7 @@ void receive_client(int fd){
       uint8_t sent[1024];
       if((str = parse_buffer(message.buffer, message.end)) != NULL){
          log_sstp(fd,str);
+
          header_t header = check_header(str);
          parse_input(str,sent,header);
          uint8_t m = strlen((char*)sent);
@@ -89,6 +76,8 @@ header_t check_header(uint8_t *src){
       return header = OKAY;
    } else if(strncmp((char*)src,"ERRO",HEADER_LEN)==0) {
       return header = ERRO;
+   } else if(strncmp((char*)src,"SOLN",HEADER_LEN)==0){
+      return header = SOLN;
    }
    return header = MALF;
 }
@@ -96,7 +85,16 @@ header_t check_header(uint8_t *src){
 
 void parse_input(uint8_t* src, uint8_t* message, header_t head){
    if(head != MALF){
-      if(strlen((char*)src) != HEADER_LEN+DELIM){
+      if(head == SOLN){
+         soln_t sol;
+         if(parse_soln(src,&sol)){
+            build_message(message,head);
+            printf("%s\n",sol.seed );
+         } else{
+            build_message(message,MALF);
+         }
+      }
+      else if(strlen((char*)src) != HEADER_LEN+DELIM){
          build_message(message,MALF);
       } else {
          build_message(message,head);
@@ -104,7 +102,6 @@ void parse_input(uint8_t* src, uint8_t* message, header_t head){
    } else{
       build_message(message,head);
    }
-
 }
 
 
@@ -119,5 +116,35 @@ void build_message(uint8_t* message, header_t head){
       strncpy((char*)message,"ERRO ERRO is reserved for server\r\n",HEADER_LEN+ERROR_LEN);
    } else if (head == MALF){
       strncpy((char*)message,"ERRO Invalid message\r\n",HEADER_LEN+ERROR_LEN);
+   } else if (head == SOLN){
+      //temp
+      strncpy((char*)message,"Chill'n\r\n",30);
    }
+}
+
+
+int parse_soln(uint8_t* src, soln_t* soln){
+   if(strlen((char*)src)!=97){
+      return 0;
+   }
+   char* token = strtok((char*)src," \r\n");
+   while (token != NULL) {
+      if(strlen(token) == 4){
+         strncpy(soln->head,token,4);
+         token = strtok(NULL," \r\n");
+      } else if(strlen(token) == 8){
+         strncpy(soln->diff,token,8);
+         token = strtok(NULL," \r\n");
+      } else if(strlen(token) == 64){
+         strncpy(soln->seed,token,64);
+         token = strtok(NULL," \r\n");
+      } else if(strlen(token) == 16){
+         strncpy(soln->sol,token,16);
+         token = strtok(NULL," \r\n");
+      }
+      else{
+         return 0;
+      }
+   }
+   return 1;
 }
