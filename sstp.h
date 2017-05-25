@@ -9,6 +9,7 @@
 #define DELIM 2
 #define BUF_LEN 1024
 #define SOLN_LEN 16
+#define WORK_LEN 2
 
 typedef enum header_e{
    PING,
@@ -16,6 +17,8 @@ typedef enum header_e{
    OKAY,
    ERRO,
    SOLN,
+   WRONG,
+   CORRECT,
    MALF
 }header_t;
 
@@ -24,7 +27,17 @@ typedef struct soln_s{
    char head[HEADER_LEN+1];
    char diff[DIFF_LEN+1];
    char seed[SEED_LEN+SOLN_LEN+1];
-   char sol[SOLN_LEN+1];
+   char sol[SOLN_LEN];
 }soln_t;
 
+typedef struct work_s{
+   char head[HEADER_LEN+1];
+   char diff[DIFF_LEN+1];
+   char seed[SEED_LEN+SOLN_LEN+1];
+   char sol[SOLN_LEN+1];
+   char count[WORK_LEN];
+}work_t;
+
 void receive_client(int fd);
+int parse_soln(uint8_t* src,soln_t* soln);
+int parse_work(uint8_t* src, work_t* work);

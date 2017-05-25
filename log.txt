@@ -1,24 +1,4 @@
-[2017-05-24 21:50:14] Server Initialised
-[2017-05-24 21:50:26] (16.2.227.203) Socket:5 New Connection 
-[2017-05-24 21:50:30] (16.2.227.203) Socket:5 PING
-
-[2017-05-24 21:50:30] (16.2.227.203) Socket:5 PONG
-
-[2017-05-24 21:50:35] (16.2.227.203) Socket:5 PIN
-
-[2017-05-24 21:50:35] (16.2.227.203) Socket:5 ERRO Invalid message
-
-[2017-05-24 21:50:39] (16.2.227.203) Socket:5 PINGlkashdfjh
-
-[2017-05-24 21:50:39] (16.2.227.203) Socket:5 ERRO Invalid message
-
-[2017-05-24 21:50:42] (16.2.227.203) Socket:5 PONG
-
-[2017-05-24 21:50:42] (16.2.227.203) Socket:5 ERRO PONG is reserved for server
-
-[2017-05-24 21:50:51] (16.2.227.203) Socket:5 PONGalskdj
-
-[2017-05-24 21:50:51] (16.2.227.203) Socket:5 ERRO Invalid message
-
-[2017-05-24 21:51:22] (0.0.0.0) Closing Log File
-[2017-05-24 21:51:22] (0.0.0.0) Server Terminated
+[2017-05-25 21:23:22] Server Initialised
+[2017-05-25 21:23:25] (16.2.216.214) Socket:5 New Connection 
+[2017-05-25 21:23:30] (0.0.0.0) Closing Log File
+[2017-05-25 21:23:30] (0.0.0.0) Server Terminated
