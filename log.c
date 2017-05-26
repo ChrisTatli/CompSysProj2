@@ -17,7 +17,6 @@ void log_datetime();
 void log_client_ip(int socket);
 
 
-
 /*
 ** Initialise a new file to log server and client interactions
 */
@@ -97,11 +96,21 @@ void log_connect(int socket){
 }
 
 
-void log_sstp(int socket, uint8_t *msg){
+void log_sstp_in(int socket, uint8_t *msg){
    pthread_mutex_lock(&lock);
    if(log_f){
       log_datetime();
       log_client_ip(socket);
+      fprintf(log_f, "%s\n", msg);
+   }
+   pthread_mutex_unlock(&lock);
+}
+
+void log_sstp_out(int socket, uint8_t *msg){
+   pthread_mutex_lock(&lock);
+   if(log_f){
+      log_datetime();
+      fprintf(log_f, " (0.0.0.0) " );
       fprintf(log_f, "%s\n", msg);
    }
    pthread_mutex_unlock(&lock);

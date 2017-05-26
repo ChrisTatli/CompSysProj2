@@ -14,13 +14,6 @@ uint32_t convert_diff(char* src){
    return (uint32_t)strtoul(src,&p,16);
 }
 
-void convert_solution(char* src, BYTE* dst){
-   int n=0;
-   for(int i = 0;i<8;i++){
-      dst[i] = to_hex(src[n],src[n+1]);
-      n+=2;
-   }
-}
 
 void convert_seed_nonce(char* src, BYTE* dst){
    int n=0;
@@ -47,7 +40,7 @@ void get_beta(uint32_t src, BYTE* res){
 }
 
 
-int check_solution(char* difficulty, char* seed_cat_sol){
+int check_solution(char* difficulty, BYTE* seed_cat_sol){
    uint32_t diff = convert_diff(difficulty);
 
    uint32_t alpha = get_alpha(diff);

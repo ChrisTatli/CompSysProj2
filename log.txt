@@ -1,4 +1,32 @@
-[2017-05-25 21:23:22] Server Initialised
-[2017-05-25 21:23:25] (16.2.216.214) Socket:5 New Connection 
-[2017-05-25 21:23:30] (0.0.0.0) Closing Log File
-[2017-05-25 21:23:30] (0.0.0.0) Server Terminated
+[2017-05-26 16:35:19] Server Initialised
+[2017-05-26 16:35:21] (16.2.202.45) Socket:5 New Connection 
+[2017-05-26 16:35:23] (16.2.202.45) Socket:5 PING
+
+[2017-05-26 16:35:23] (0.0.0.0) PONG
+
+[2017-05-26 16:35:25] (16.2.202.45) Socket:5 PONG
+
+[2017-05-26 16:35:25] (0.0.0.0) ERRO PONG is reserved for server      
+
+[2017-05-26 16:35:37] (16.2.202.45) Socket:5 SOLN 1fffffff 0000000019d6689c085ae165831e934ff763ae46a218a6c172b3f1b60a8ce26f 1000000023212147
+
+[2017-05-26 16:35:37] (0.0.0.0) OKAY
+
+[2017-05-26 16:35:49] (16.2.202.45) Socket:5 SOLN 1fffffff 0000000019d6689c085ae165831e934ff763ae46a218a6c172b3f1b60a8ce26f 1000000023212147
+
+[2017-05-26 16:35:49] (0.0.0.0) OKAY
+
+[2017-05-26 16:36:06] (16.2.202.45) Socket:5 SOLN 1fffffff 0000000019d6689c085ae165831e934ff763ae46a218a6c172b3f1b60a8ce26f 1000000023212147
+
+[2017-05-26 16:36:06] (0.0.0.0) OKAY
+
+[2017-05-26 16:36:11] (16.2.202.45) Socket:5 SOLN 1fffffff 0000000029d6689c085ae165831e934ff763ae46a218a6c172b3f1b60a8ce26f 1000000023212147
+
+[2017-05-26 16:36:11] (0.0.0.0) ERRO SOLN was wrong                   
+
+[2017-05-26 16:36:17] (16.2.202.45) Socket:5 aslkdfhalksdjfas;ldkfj;asldfjk;aslkfjas;dlfkj
+
+[2017-05-26 16:36:17] (0.0.0.0) ERRO Invalid message                  
+
+[2017-05-26 16:36:43] (0.0.0.0) Closing Log File
+[2017-05-26 16:36:43] (0.0.0.0) Server Terminated

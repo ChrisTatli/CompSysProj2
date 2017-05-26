@@ -19,6 +19,7 @@ typedef enum header_e{
    SOLN,
    WRONG,
    CORRECT,
+   WORK,
    MALF
 }header_t;
 
@@ -27,15 +28,21 @@ typedef struct soln_s{
    char head[HEADER_LEN+1];
    char diff[DIFF_LEN+1];
    char seed[SEED_LEN+SOLN_LEN+1];
-   char sol[SOLN_LEN];
+   char sol[SOLN_LEN+1];
 }soln_t;
+
+typedef struct data_s{
+   char difficulty[DIFF_LEN+1];
+   BYTE seed[32];
+   BYTE start[32];
+}data_t;
 
 typedef struct work_s{
    char head[HEADER_LEN+1];
    char diff[DIFF_LEN+1];
-   char seed[SEED_LEN+SOLN_LEN+1];
+   char seed[SEED_LEN+1];
    char sol[SOLN_LEN+1];
-   char count[WORK_LEN];
+   char count[WORK_LEN+1];
 }work_t;
 
 void receive_client(int fd);

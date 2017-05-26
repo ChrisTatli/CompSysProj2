@@ -4,6 +4,15 @@ uint8_t to_hex(uint8_t c1, uint8_t c2){
    uint8_t j = hex2bin(c2);
    return i<<4 | j;
 }
+/*
+void to_hex(BYTE* src, BYTE* dst,int len){
+   int n =0;
+   for(int i=0;i<len;i+=2){
+      dst[n] = (hex2bin(src[i])>>4) | hex2bin(src[i+1]);
+      n++;
+   }
+}
+*/
 
 void from_hex(BYTE* src,BYTE* dst,int len){
    int n=0;
@@ -23,7 +32,7 @@ uint8_t hex2bin(uint8_t c){
 }
 
 uint8_t bin2hex(uint8_t c){
-   char table[15]="0123456789abcdef";
+   char table[16]="0123456789abcdef";
    //printf("%c\n",table[c] );
    return table[c];
 }

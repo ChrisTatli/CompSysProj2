@@ -113,7 +113,6 @@ int init_server(char *port){
 
 void *handle_client(int fd){
    receive_client(fd);
-   printf("gother\n" );
    close(fd);
 }
 
