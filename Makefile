@@ -1,4 +1,4 @@
-#ctatli 640427
+#ctatli
 
 CC = gcc
 CFLAGS = -Wall -std=gnu99
